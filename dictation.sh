@@ -1,16 +1,15 @@
 #!/bin/bash
-if [ ! -f $1 ]; then
-  echo -e "\a❌  unknown file '$1'";
-  exit 1;
-fi
+test ! -f $1 && echo -e "\a❌  FILE NOT FOUND" && exit 1
 
-for word in $(cat $1 ); do
-  say --voice=Yuri $word;
-  read answer; [ "$word" = "$answer" ] && echo "✓" && continue
+# shuffle: http://stackoverflow.com/a/17581317/79461
+for word in $(cat $1 | perl -MList::Util=shuffle -e 'print shuffle<STDIN>' ); do
+  say --voice=Yuri $word
+  read answer; test "$word" = "$answer" && echo "✓" && continue
+
   echo -e "\a ❌ "
 
-  say --voice=Milena $word;
-  read answer; [ "$word" = "$answer" ] && echo "✓" && continue
+  say --voice=Milena $word
+  read answer; test "$word" = "$answer" && echo "✓" && continue
 
-  echo -e "\a ❌  = $word (press to continue)"; read wait
+  echo -e "\a → $word        (⏎ to continue)"; read wait
 done
