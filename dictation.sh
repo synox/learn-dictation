@@ -1,22 +1,16 @@
 #!/bin/bash
+if [ ! -f $1 ]; then
+  echo -e "\a❌  unknown file '$1'";
+  exit 1;
+fi
 
-for f in $(cat words.txt ); do
-  for try in 1 2 3; do
-    if [ $try -eq 1 ]; then
-      say --voice=Yuri $f;
-    elif [ $try -eq 2 ]; then
-      say --voice=Milena $f;
-    elif [ $try -eq 3 ]; then
-      echo "= $f (press to continue)"
-      read wait
-      break
-    fi
-    read answer;
-    if [ "$f" = "$answer" ]; then
-      echo "✓"
-      break
-     else
-         echo -e "\a ❌ "
-      fi
-  done
+for word in $(cat $1 ); do
+  say --voice=Yuri $word;
+  read answer; [ "$word" = "$answer" ] && echo "✓" && continue
+  echo -e "\a ❌ "
+
+  say --voice=Milena $word;
+  read answer; [ "$word" = "$answer" ] && echo "✓" && continue
+
+  echo -e "\a ❌  = $word (press to continue)"; read wait
 done
