@@ -1,4 +1,7 @@
 #!/bin/bash
+# usage: ./dictation.sh words.txt
+# change the voice to your desired language (Yuri and Milena speak russian)
+
 test ! -f $1 && echo -e "\a❌  FILE NOT FOUND" && exit 1
 
 # shuffle: http://stackoverflow.com/a/17581317/79461
